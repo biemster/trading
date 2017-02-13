@@ -6,9 +6,8 @@ from matplotlib.backends.backend_pdf import PdfPages
 tseries = pickle.load(open('EurodollarTimeseries.pickle','rb'))
 
 dates = []
-for y in [12,13,14]:
+for y in range(12,17):
     for m in range(1,13):
-        if y==14 and m>11: break
         dates.append( str(tseries['EDM17'].ix['20%d-%0d-01'%(y,m):'20%d-%0d-05'%(y,m),'Open'].index[0])[:10] )
 
 with PdfPages('EurodollarSpreads.pdf') as pdf:
@@ -55,4 +54,5 @@ with PdfPages('EurodollarSpreads.pdf') as pdf:
         plt.title('eurodollar spreads %s Open' % date)
         plt.axes().yaxis.grid(True, 'both')
         pdf.savefig(bbox_inches='tight')
+        if date in ["2012-03-01", "2013-01-02", "2013-07-01", "2013-12-02", "2014-02-03", "2014-05-01", "2015-05-01", "2016-02-01", "2016-11-01"]: plt.show()
         plt.close()
