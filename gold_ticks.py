@@ -1,13 +1,10 @@
 #!/usr/bin/env python
+import glob
 import pandas
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
-    tick_files = ['ticks/quotesIB_20170213.txt',
-                  'ticks/quotesIB_20170214.txt',
-                  'ticks/quotesIB_20170215.txt',
-                  'ticks/quotesIB_20170216.txt']
-    all_ticks = pandas.concat([pandas.read_csv(f) for f in tick_files], ignore_index=True)
+    all_ticks = pandas.concat([pandas.read_csv(f) for f in glob.glob('ticks/quotesIB*')], ignore_index=True)
     all_ticks['ts'] = pandas.DatetimeIndex((all_ticks['timestamp']*10**9) + (all_ticks['msec']*10**6))
 
     all_ticks_bid = (all_ticks.type == 'BID')
@@ -54,7 +51,8 @@ if __name__ == "__main__":
                         .reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price)
                         # .resample('L').pad()
 
-    print xauusd_bid
-    xauusd_bid.resample("5T").plot()
-    gc2_bid.resample("5T").plot()
+    # xauusd_bid.resample("5T").plot()
+    # gc2_bid.resample("5T").plot()
+    (gc2_ask.resample('30S') - xauusd_bid.resample('30S')).plot()
+    (gc2_bid.resample('30S') - xauusd_ask.resample('30S')).plot()
     plt.show()
