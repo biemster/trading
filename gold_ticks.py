@@ -3,7 +3,11 @@ import pandas
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
-    all_ticks = pandas.read_csv('ticks/quotesIB_20170214.txt')
+    tick_files = ['ticks/quotesIB_20170213.txt',
+                  'ticks/quotesIB_20170214.txt',
+                  'ticks/quotesIB_20170215.txt',
+                  'ticks/quotesIB_20170216.txt']
+    all_ticks = pandas.concat([pandas.read_csv(f) for f in tick_files], ignore_index=True)
     all_ticks['ts'] = pandas.DatetimeIndex((all_ticks['timestamp']*10**9) + (all_ticks['msec']*10**6))
 
     all_ticks_bid = (all_ticks.type == 'BID')
@@ -15,27 +19,42 @@ if __name__ == "__main__":
     mgc1_symbol = (all_ticks.symbol == 'MGCG7')
     mgc2_symbol = (all_ticks.symbol == 'MGCJ7')
 
-    xauusd_bid = pandas.Series(all_ticks[all_ticks_bid][xauusd_symbol][no_empty_price].reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price).resample('L').pad()
-    # xauusd_ask = pandas.Series(all_ticks[all_ticks_ask][xauusd_symbol][no_empty_price].reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price).resample('L').pad()
+    xauusd_bid = pandas.Series(all_ticks[all_ticks_bid][xauusd_symbol][no_empty_price]
+                        .reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price)
+                        # .resample('L').pad()
+    xauusd_ask = pandas.Series(all_ticks[all_ticks_ask][xauusd_symbol][no_empty_price]
+                        .reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price)
+                        # .resample('L').pad()
 
-    # gc1_bid = pandas.Series(all_ticks[all_ticks_bid][gc1_symbol][no_empty_price].reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price).resample('L').pad()
-    # gc1_ask = pandas.Series(all_ticks[all_ticks_ask][gc1_symbol][no_empty_price].reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price).resample('L').pad()
+    gc1_bid = pandas.Series(all_ticks[all_ticks_bid][gc1_symbol][no_empty_price]
+                        .reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price)
+                        # .resample('L').pad()
+    gc1_ask = pandas.Series(all_ticks[all_ticks_ask][gc1_symbol][no_empty_price]
+                        .reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price)
+                        # .resample('L').pad()
     
-    gc2_bid = pandas.Series(all_ticks[all_ticks_bid][gc2_symbol][no_empty_price].reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price).resample('L').pad()
-    # gc2_ask = pandas.Series(all_ticks[all_ticks_ask][gc2_symbol][no_empty_price].reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price).resample('L').pad()
+    gc2_bid = pandas.Series(all_ticks[all_ticks_bid][gc2_symbol][no_empty_price]
+                        .reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price)
+                        # .resample('L').pad()
+    gc2_ask = pandas.Series(all_ticks[all_ticks_ask][gc2_symbol][no_empty_price]
+                        .reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price)
+                        # .resample('L').pad()
     
-    # mgc1_bid = pandas.Series(all_ticks[all_ticks_bid][mgc1_symbol][no_empty_price].reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price).resample('L').pad()
-    # mgc1_ask = pandas.Series(all_ticks[all_ticks_ask][mgc1_symbol][no_empty_price].reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price).resample('L').pad()
+    mgc1_bid = pandas.Series(all_ticks[all_ticks_bid][mgc1_symbol][no_empty_price]
+                        .reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price)
+                        # .resample('L').pad()
+    mgc1_ask = pandas.Series(all_ticks[all_ticks_ask][mgc1_symbol][no_empty_price]
+                        .reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price)
+                        # .resample('L').pad()
     
-    # mgc2_bid = pandas.Series(all_ticks[all_ticks_bid][mgc2_symbol][no_empty_price].reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price).resample('L').pad()
-    # mgc2_ask = pandas.Series(all_ticks[all_ticks_ask][mgc2_symbol][no_empty_price].reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price).resample('L').pad()
+    mgc2_bid = pandas.Series(all_ticks[all_ticks_bid][mgc2_symbol][no_empty_price]
+                        .reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price)
+                        # .resample('L').pad()
+    mgc2_ask = pandas.Series(all_ticks[all_ticks_ask][mgc2_symbol][no_empty_price]
+                        .reset_index().drop_duplicates(subset='ts', keep='last').set_index('ts').price)
+                        # .resample('L').pad()
 
     print xauusd_bid
-    # xauusd_bid.resample("S").plot()
-    # gc2_bid.resample("S").plot()
-    # plt.show()
-
-    t_start = '2017-02-14 16'
-    t_end = '2017-02-14 17'
-    (gc2_bid[t_start:t_end]-xauusd_bid[t_start:t_end]).plot()
+    xauusd_bid.resample("5T").plot()
+    gc2_bid.resample("5T").plot()
     plt.show()
