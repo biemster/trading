@@ -56,3 +56,16 @@ if __name__ == "__main__":
     (gc2_ask.resample('30S') - xauusd_bid.resample('30S')).plot()
     (gc2_bid.resample('30S') - xauusd_ask.resample('30S')).plot()
     plt.show()
+
+    day = '2017-02-08'
+    median = ((gc2_ask[day].resample('L').pad() - xauusd_bid[day].resample('L').pad())
+           + (gc2_bid[day].resample('L').pad() - xauusd_ask[day].resample('L').pad())).dropna() / 2
+
+    print median.min()
+    print median.mean()
+    print median.max()
+    median.hist()
+    plt.show()
+
+    median[median < 0].resample('30S').plot()
+    plt.show()
